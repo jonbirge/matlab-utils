@@ -1,4 +1,4 @@
-function h = plotbw(varargin)
+function h = myplot(varargin)
 
 %grey = [0.5 0.5 0.5];
 black = [0 0 0];
