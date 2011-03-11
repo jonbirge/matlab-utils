@@ -1,4 +1,4 @@
-function varargout = zplane(z,p,varargin)
+function varargout = myzplane(z,p,varargin)
 %ZPLANE Z-plane zero-pole plot.
 %   ZPLANE(Z,P) plots the zeros Z and poles P (in column vectors) with the 
 %   unit circle for reference.  Each zero is represented with a 'o' and 
@@ -22,19 +22,15 @@ function varargout = zplane(z,p,varargin)
 %
 %   See also FREQZ, GRPDELAY, IMPZ.
 
-%   Author(s): T. Krauss, 3-19-93
-%   Copyright 1988-2001 The MathWorks, Inc.
-%   $Revision: 1.18 $  $Date: 2001/04/02 20:20:39 $
-%   Modifications by J. Birge, 11-01
 
-error(nargchk(1,3,nargin))
+error(nargchk(1,3,nargin)) %#ok<ERTAG>
 
 if nargin < 2,
     p = [];
 end
 
 [z,p,msg] = parseinput(z,p);
-error(msg);
+error('myzplane:err', msg);
 
 [zh,ph,oh] = plotzp(z,p,varargin{:});
 
@@ -53,20 +49,19 @@ end
 %-------------------------------------------------------------------
 function [z,p,msg] = parseinput(z,p)
 
-msg = '';
+msg = ''; %#ok<NASGU>
 
 % If first arg is a row, second must be a row, empty or scalar, flag = 1
-[test1flag,msg] = istf(z,p);
+[test1flag, msg] = istf(z,p);
 if ~isempty(msg),
     return
 end
 
 % If second arg is a row, first must be a row, empty or scalar, flag = 1
-[test2flag,msg] = istf(p,z);
+[test2flag, msg] = istf(p,z);
 if ~isempty(msg),
     return
 end
-
 
 istfflag = test1flag | test2flag;
  
@@ -76,7 +71,7 @@ if istfflag,
     h = df2t(z,p);
     
     % Compute the poles and zeros
-    [z,p,k] = zpk(h);
+    [z,p,~] = zpk(h);
 end
 
 %-------------------------------------------------------------------
@@ -85,9 +80,9 @@ function [flag,msg] = istf(b,a)
 msg = '';
 flag = 0; % Flag indicating whether a transfer function was specified
 
-if isrow(b) & ~isscalar(b),
+if isrow(b) && ~isscalar(b),
     % If first arg is a row, second must be row or empty
-    if ~(isrow(a) | is0x0(a)),
+    if ~(isrow(a) || is0x0(a)),
         msg = 'When specifying polynomials, both vectors must be rows.';
         return
     else
@@ -123,20 +118,20 @@ end
 function [zh,ph,oh] = plotzp(z,p,ax)
 
 if ~any(imag(z)),
-   z = z + j*1e-50;
+   z = z + 1j*1e-50;
 end;
 if ~any(imag(p)),
-   p = p + j*1e-50;
+   p = p + 1j*1e-50;
 end;
 
 if nargin < 3
    ax = newplot;
 else
-   axes(ax)
+   axes(ax) %#ok<MAXES>
 end
 
 kids = get(ax,'Children');
-for i = 1:length(kids)
+for i = 1:length(kids) %#ok<FORPF>
    delete(kids(i));
 end
 set(ax,'box','on')
@@ -189,10 +184,9 @@ set(oh,'ydat',[get(oh,'ydat') NaN 0 0 NaN ...
       yl(1)-diff(yl)*100 yl(2)+diff(yl)*100]);
 
 handle_counter = 2;	
-fuzz = diff(xl)/80; % horiz spacing between 'o' or 'x' and number
-fuzz=0;
+fuzz = 0;
 [r,c]=size(z);
-if (r>1)&(c>1),  % multiple columns in z
+if (r>1) && (c>1),  % multiple columns in z
    ZEE=z;
 else
    ZEE=z(:); c = min(r,c);
@@ -218,7 +212,7 @@ for which_col = 1:c,      % for each column of ZEE ...
    end
 end
 [r,c]=size(p);
-if (r>1)&(c>1),  % multiple columns in z
+if (r>1) && (c>1),  % multiple columns in z
    PEE=p;
 else
    PEE=p(:); c = min(r,c);

@@ -1,4 +1,4 @@
-function hh = stem(varargin)
+function hh = mystem(varargin)
 %STEM   Discrete sequence or "stem" plot.
 %   STEM(Y) plots the data sequence Y as stems from the x axis
 %   terminated with circles for the data value.
@@ -15,8 +15,6 @@ function hh = stem(varargin)
 %
 %   See also PLOT, BAR, STAIRS.
 
-%   Copyright 1984-2002 The MathWorks, Inc. 
-%   $Revision: 5.19 $  $Date: 2002/06/05 20:05:17 $
 
 nin = nargin;
 
@@ -26,15 +24,15 @@ ms = '.';
 col = '';
 
 % Parse the string inputs
-while isstr(varargin{nin}),
+while ischar(varargin{nin}),
   v = varargin{nin};
-  if ~isempty(v) & strcmp(lower(v(1)),'f')
+  if ~isempty(v) && strcmpi(v(1), 'f')
     fill = 1;
     nin = nin-1;
   else
     [l,c,m,msg] = colstyle(v);
     if ~isempty(msg), 
-      error(sprintf('Unknown option "%s".',v));
+      error('mystem:err', 'Unknown option "%s".',v);
     end
     if ~isempty(l), ls = l; end
     if ~isempty(c), col = c; end
@@ -43,10 +41,10 @@ while isstr(varargin{nin}),
   end
 end
 
-error(nargchk(1,2,nin));
+error(nargchk(1,2,nin)); %#ok<ERTAG>
 
 [msg,x,y] = xychk(varargin{1:nin},'plot');
-if ~isempty(msg), error(msg); end
+if ~isempty(msg), error('mystem:err', msg); end
 
 if min(size(x))==1, x = x(:); end
 if min(size(y))==1, y = y(:); end
@@ -69,7 +67,7 @@ hold_state = ishold;
 
 h1 = plot(x,y,[col,ms],'parent',cax); hold on,
 h2 = plot(xx,yy,[col,ls],'parent',cax);
-for i=1:length(h1), % Make the color of the 'o's the same as the lines.
+for i=1:length(h1), %#ok<FORPF> % Make the color of the 'o's the same as the lines.
   c = get(h2(i),'Color');
   set(h1(i),'Color',c)
   if fill, set(h1(i),'MarkerFaceColor',c), end

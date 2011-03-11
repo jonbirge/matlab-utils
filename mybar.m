@@ -1,4 +1,4 @@
-function [xo,yo] = bar(varargin)
+function [xo,yo] = mybar(varargin)
 %BAR Bar graph.
 %    BAR(X,Y) draws the columns of the M-by-N matrix Y as M groups of N
 %    vertical bars.  The vector X must be monotonically increasing or
@@ -25,21 +25,16 @@ function [xo,yo] = bar(varargin)
 %
 %    See also HIST, PLOT, BARH.
 
-%    C.B Moler 2-06-86
-%    Modified 24-Dec-88, 2-Jan-92 LS.
-%    Modified 8-5-91, 9-22-94 by cmt; 8-9-95 WSun.
-%    Copyright 1984-2001 The MathWorks, Inc. 
-%    $Revision: 5.33 $  $Date: 2001/04/15 12:03:48 $
 
-error(nargchk(1,4,nargin));
+error(nargchk(1,4,nargin)); %#ok<ERTAG>
 
-[msg,x,y,xx,yy,linetype,plottype,barwidth,equal] = makebars(varargin{:});
-if ~isempty(msg), error(msg); end
+[msg,x,~,xx,yy,linetype,~,~,equal] = makebars(varargin{:});
+if ~isempty(msg), error('mybar:err', msg); end
 
 if nargout==2,
-  warning(sprintf(...
+  warning('mybar:args', ...
      ['BAR with two output arguments is obsolete.  Use H = BAR(...) \n',...
-      '         and get the XData and YData properties instead.']))
+      '         and get the XData and YData properties instead.'])
   xo = xx; yo = yy; % Do not plot; return result in xo and yo
 else % Draw the bars
   cax = newplot;
@@ -69,7 +64,7 @@ else % Draw the bars
   end
   if ~hold_state, 
     % Set ticks if less than 16 integers
-    if all(all(floor(x)==x)) & (size(x,1)<16),  
+    if all(all(floor(x)==x)) & (size(x,1)<16),   %#ok<AND2>
       set(cax,'xtick',x(:,1))
     end
     hold off, view(2), set(cax,'NextPlot',next);
