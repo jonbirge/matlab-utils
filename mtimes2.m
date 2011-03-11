@@ -14,11 +14,11 @@ for i = (N-1):-1:1,
    [Am, An, Az] = size(A);
    [Bm, Bn, Bz] = size(B);
    
-   if (Am ~= Bn & Am*An ~= 1 & Bm*Bn ~= 1)
-      error('The inner dimensions must be equal or one must be scalar.')
+   if (Am ~= Bn && Am*An ~= 1 && Bm*Bn ~= 1)
+      error('mtimes2:dim', 'The inner dimensions must be equal or one must be scalar.')
    end
-   if (Az ~= Bz & Az ~= 1 & Bz ~= 1)
-      error('The third dimensions must be equal or one must be singleton.')
+   if (Az ~= Bz && Az ~= 1 && Bz ~= 1)
+      error('mtimes2:dim', 'The third dimensions must be equal or one must be singleton.')
    end
    
    % Case I: A or B is a single matrix

@@ -7,8 +7,8 @@ function r = polishedroots(c)
 
 
 % Initialization.
-if size(c, 1) > 1 & size(c, 2) > 1
-    error('Must be a vector.')
+if size(c, 1) > 1 && size(c, 2) > 1
+    error('polishedroots:arg', 'Must be a vector.')
 end
 c = c(:).';
 n = size(c, 2);
@@ -35,6 +35,6 @@ if n > 1
 end
 
 % Polish roots via Laguerre iteration.
-for i = 1:length(tr),
+parfor i = 1:length(tr),
    r(i,:) = laguerre(c, tr(i));
 end

@@ -6,5 +6,5 @@ function y = flatten(x)
 y = zeros(m*n, 1);
 for k = 1:m,
   start = (k-1)*n + 1;
-  y(start + [0:n-1]) = x(k, :);
+  y(start + (0:n-1)) = x(k, :);
 end

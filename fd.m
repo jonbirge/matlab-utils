@@ -3,7 +3,7 @@ function dydx = fd(x, y)
 %  Finite difference across second dimension. Should be expanded
 %  to handle arbitrary dimensions, like diff does.
 
-[m,n] = size(y);
+[m, ~] = size(y);
 
 dx = diff(x, 1, 2);
 dy = diff(y, 1, 2);

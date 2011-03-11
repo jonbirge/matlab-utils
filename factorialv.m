@@ -1,4 +1,4 @@
-function p = factorial(n)
+function p = factorialv(n)
 %FACTORIAL Vectorized factorial function.
 %   FACTORIAL(N) is the product of all the integers from 1 to N,
 %   i.e. prod(1:N). Since double precision numbers only have about
@@ -9,6 +9,6 @@ function p = factorial(n)
 %   See also PROD.
 
 N = length(n);
-for k = 1:N,
+parfor k = 1:N,
   p(k) = prod(1:n(k));
 end

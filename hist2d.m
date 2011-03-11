@@ -1,4 +1,4 @@
-function [phi, xc, yc] = hist2(x, y, n)
+function [phi, xc, yc] = hist2d(x, y, n)
 %HIST2  Two-dimensional histogram.
 
 if (nargin < 3)
@@ -17,7 +17,7 @@ yedges = linspace(ymin, ymax, n + 1);
 % Generate histograms along y-axis.
 for i = 1:n,
    yi = y(x >= xedges(i) & x < xedges(i + 1));
-   if length(yi)
+   if ~isempty(yi)
       yhisti = histc(yi, yedges);
    else
       yhisti = zeros(1, n+1);
@@ -44,5 +44,5 @@ if (nargout == 0)
    ylabel('\ity')
    %bar3(xc, h, 1, 'hist')
 else
-   phi = h
+   phi = h;
 end
