@@ -4,7 +4,7 @@ function mlines = countmlines(filename)
 %   number of lines of code, excluding white space and comments.
 
 mlines = 0;
-f = fopen([dirname '/' filename]);
+f = fopen(filename);
 if f ~= -1
   mline = fgets(f);
   while ischar(mline)
