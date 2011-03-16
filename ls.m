@@ -28,7 +28,7 @@ hidedots = true;
 hideasv = true;
 summary = true;
 countdir = true;  % count directory size
-depthlimit = 2;  % how far to recurse directories
+depthlimit = 1;  % how far to recurse directories
 
 
 % Input handling.
@@ -214,16 +214,7 @@ if (level <= depthlimit) && (dirname(end) ~= '.' || level == 0)
     else
       typestr = parsesuffix(d.name);
       if typestr == 'm'
-        mfiles = mfiles + 1;
-        f = fopen([dirname '/' filename]);
-        mline = fgets(f);
-        while ischar(mline)
-          if ~isempty(regexp(mline, '\w+', 'once'))
-            mlines = mlines + 1;
-          end
-          mline = fgets(f);
-        end
-        fclose(f);
+        mlines = mlines + countmlines([dirname '/' filename]);
       end
     end
   end
@@ -231,7 +222,10 @@ end
 mfilesout = mfiles;
 mlinesout = mlines;
 
-%%% Recursive directory size subroutine.
+%%% Recursive directory size subroutine. Should be replaced (along with the
+%%% above) with a single routine that travels the whole tree and is given a
+%%% functional to apply to each file, which is then summed. Sort of a
+%%% directory summary function that acts recursively.
 function sout = dirsize(dirname, depthlimit, level)
 if nargin < 3
   level = 0;
@@ -252,10 +246,3 @@ if (level <= depthlimit) && (dirname(end) ~= '.')
 end
 sout = s;
 
-%%% Make size string from size in kB.
-function sizestr = makesizestr(thesize)
-if thesize/1000 > 1
-  sizestr = [num2str(floor(thesize/100)/10) 'M'];
-else
-  sizestr = [num2str(floor(thesize)) 'k'];
-end
