@@ -1,6 +1,6 @@
 function A = mtimes2(varargin)
-% MTIMES2  Multiply deep matrices.
-%  C = mtimes2(A, B, ...) calculates the inner product of the matrices, vectorized
+%MTIMES2 Multiply deep matrices.
+%  C = mtimes2(A, ...) calculates the inner product of the matrices, vectorized
 %  across a third dimension. The function will act just like mtimes
 %  for two dimensional matrices.
 
