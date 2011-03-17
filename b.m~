@@ -1,5 +1,6 @@
 function p = b(r, n, pi)
-%B  Binomial distribution.
+%BINO  Binomial distribution.
+%  Compute binomial PDF in a simpler way than 
 
 p = zeros(length(r),1);
 parfor i = 1:length(r),
