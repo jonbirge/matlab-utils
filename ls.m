@@ -1,14 +1,14 @@
 function ls(files)
-%LS list directory
-%   ls returns a directory listing in the current directory, or in an
-%   optional path given. The output is sorted into columns, ASV files are
-%   supressed, and common MATLAB file types are highlighten. In addition M
-%   files are entered and displayed with a different symbol depending on
-%   whether it be object, function, or script. A summary shows the total
-%   size of the contents, including a sum of the MATLAB code lines
-%   contained in the directory tree.
+%LS list directory with formatting.
+%  ls returns a directory listing in the current directory, or in an
+%  optional path given. The output is sorted into columns, ASV files are
+%  supressed, and common MATLAB file types are highlighten. In addition M
+%  files are entered and displayed with a different symbol depending on
+%  whether it be object, function, or script. A summary shows the total
+%  size of the contents, including a sum of the MATLAB code lines
+%  contained in the directory tree.
 %
-%   See also CD, DIR, WHAT, TYPE.
+%  See also CD, DIR, WHAT, TYPE.
 
 % TODO: Maybe the columns should have headings showing the type before each
 % group.
@@ -16,6 +16,7 @@ function ls(files)
 % subdirectories by just keeping a list of all M-files during the directory
 % tree recurse. Then we can just scan through it linearly. Use a recursive
 % subfunction which writes to a variable in the top level function.
+
 
 % Hard coded settings.
 ncols = 3;
@@ -29,7 +30,6 @@ hideasv = true;
 summary = true;
 countdir = true;  % count directory size
 depthlimit = 1;  % how far to recurse directories
-
 
 % Input handling.
 if nargin == 0

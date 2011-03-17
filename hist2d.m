@@ -1,5 +1,5 @@
 function [phi, xc, yc] = hist2d(x, y, n)
-%HIST2  Two-dimensional histogram.
+%HIST2 Two-dimensional histogram.
 
 if (nargin < 3)
    n = 10;  % default bins

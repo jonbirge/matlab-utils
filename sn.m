@@ -1,9 +1,10 @@
 function sn(varargin)
-%SN Show notes
-%   sn searches each .M file in the current directory, and an optional
-%   number of subdirectories recursively, and displays each comment that is
-%   preceded by the words TODO: or FIX:, with the colon neccesary. This is
-%   to facilitate the use of notes within source files themselves.
+%SN Show notes in director of M files.
+%  Searches each .M file in the current directory, and an optional
+%  number of subdirectories recursively, and displays each comment that is
+%  preceded by the words TODO: or FIX:, with the colon neccesary. This is
+%  to facilitate the use of notes within source files themselves.
+
 
 % Hard coded settings.
 depthlimit = 1;  % how far to recurse directories

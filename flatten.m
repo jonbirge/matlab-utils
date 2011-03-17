@@ -1,5 +1,5 @@
 function y = flatten(x)
-%FLATTEN  Flatten a matrix to a vector.
+%FLATTEN Flatten a matrix to a vector.
 %  v = flatten(m) takes a matrix m and turns it into a row vector.
 
 [m, n] = size(x);
