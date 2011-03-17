@@ -1,3 +1,11 @@
 A set of small utilities to make programming in MATLAB, including GUI
-development, more productive.
+development, more productive. These utilities aren't tied to a
+specific field, and should be useful for most numerical work, I hope.
+
+The addition of any similar tools developed by others would be a
+welcome addition, as I'd like to see this become a large set of
+general tools to be shared.
+
+Jonathan R. Birge
+birge@mit.edu
 
