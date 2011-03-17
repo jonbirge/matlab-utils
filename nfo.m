@@ -1,7 +1,7 @@
 function nfo(v)
-%NFO Summary information about vector
-%   nfo(v) prints summary information about the vector v, including the mean,
-%   extremes, standard deviation, mode, etc.
+%NFO Summary information about vector.
+%  nfo(v) prints summary information about the vector v, including the mean,
+%  extremes, standard deviation, mode, etc.
 
 [m, n] = size(v);
 if min(m, n) > 1
