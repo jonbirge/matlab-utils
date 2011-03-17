@@ -1,8 +1,0 @@
-function p = b(r, n, pi)
-%BINO  Binomial distribution.
-%  Compute binomial PDF in a simpler way than 
-
-p = zeros(length(r),1);
-parfor i = 1:length(r),
-   p(i) = nchoosek(n, r(i))*pi^r(i)*(1 - pi)^(n - r(i));
-end
