@@ -1,4 +1,4 @@
-function svnoblit(exsuff, filein, fileout)
+function svndumpoblit(exsuff, filein, fileout)
 
 if nargin < 1 || isempty(exsuff)
   exsuff = {'.mexw32', '.mexglx', '.mexmac', '.mexmaci64', '.mexa64', '.dll'};
