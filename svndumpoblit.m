@@ -1,7 +1,5 @@
 function svndumpoblit(exsuff, filein, fileout)
 
-% Should we use maximize size blocks during fast copy?
-
 % Input handling.
 if nargin < 1 || isempty(exsuff)
   exsuff = {'\.mexw32', '\.mexglx', '\.mexmac', '\.mexmaci64', '\.mexa64', 'mex\.dll'};
