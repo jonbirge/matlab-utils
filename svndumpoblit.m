@@ -1,7 +1,7 @@
 function svndumpoblit(exsuff, filein, fileout)
 
 if nargin < 1 || isempty(exsuff)
-  exsuff = {'.mexw32', '.mexglx', '.mexmac', '.mexmaci64', '.mexa64', '.dll'};
+  exsuff = {'\.mexw32', '\.mexglx', '\.mexmac', '\.mexmaci64', '\.mexa64', '\.pdf'};
 end
 
 if nargin < 2
@@ -30,12 +30,11 @@ copyflag = true;  % copy while true
 if fin ~= -1
   dline = fgets(fin);
   while ischar(dline)
-    nline = length(dline);
-    if nline > 16 && strcmp(dline(1:16), 'Revision-number:')
+    if strncmp(dline, 'Revision-number:', 16)
       copyflag = true;
       rev = str2double(dline(17:end));
       fprintf('Revision: %d\n', rev);
-    elseif nline > 10 && strcmp(dline(1:10), 'Node-path:')  % quick test for add
+    elseif strncmp(dline, 'Node-path:', 10)  % quick test for add
       if ~isempty(regexp(dline, testregexp, 'once'))  % test for file
         copyflag = false;
       else
