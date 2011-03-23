@@ -3,6 +3,9 @@ development, more productive. These utilities aren't tied to a
 specific field of study, and are intended to be useful for general
 numerical work.
 
+The collection also includes a utility to assist with cleaning up a
+SVN repository dump of all MEX binaries.
+
 The addition of any similarly generally applicable tools developed by
 others would be a welcome addition, as I'd like to see this become a
 large set of general tools to be shared.
