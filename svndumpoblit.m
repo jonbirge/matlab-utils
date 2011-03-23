@@ -1,11 +1,6 @@
 function svndumpoblit(exsuff, filein, fileout)
 
-% Need to handle Node-action: change properly, which has a different fucking
-% syntax for some inscrutible reason. I think we'll have to key the content
-% off the Content-length token, and then have a flag which remembers if the
-% current node was a "change" or something else, which will determine if we
-% need to skip a line or skip to a PROPS-END token. Of course, this is why I
-% switched to git for everything I could...
+% Need to handle Node-action: change properly.
 
 % Should we use maximize size blocks during fast copy?
 
