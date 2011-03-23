@@ -17,7 +17,7 @@ end
 
 % Build regular expression.
 if iscell(exsuff)
-  testregexp = [exsuff{1} '$'];
+  testregexp = exsuff{1};
   for k = 2:length(exsuff)
     testregexp = [testregexp '|' exsuff{k}];
   end
