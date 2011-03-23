@@ -1,7 +1,5 @@
 function svndumpoblit(exsuff, filein, fileout)
 
-% Need to handle Node-action: change properly.
-
 % Should we use maximize size blocks during fast copy?
 
 
@@ -49,6 +47,8 @@ contlen = 0;
 if fin ~= -1
   dline = fgets(fin);
   while ischar(dline)
+    
+    % Limited parsing.
     if strncmp(dline, revtoken, revtoklen)
       rev = str2double(dline(revtoklen+1:end));
       fprintf('Revision: %d\n', rev);
@@ -70,10 +70,12 @@ if fin ~= -1
       contlen = str2double(dline(sizetoklen+1:end));
     end
     
+    % Copy line through.
     if copyflag
       fprintf(fout, '%s', dline);
     end
 
+    % Fast forwards.
     if contlen > 0 && strncmp(dline, contoken, contoklen)  % handle content
       if changeflag
         contlen = contlen + 11;  % include PROPS-END and EOL
@@ -89,6 +91,7 @@ if fin ~= -1
       contlen = 0;
     end
     
+    % Read in next line.
     dline = fgets(fin);
   end
   
