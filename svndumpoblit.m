@@ -39,6 +39,7 @@ fout = fopen([pathout fnameout], 'w');
 
 % Cycle through file.
 saved = 0;
+nodes = 0;
 copyflag = true;  %#ok<*NASGU> % copy while true
 changeflag = false;
 contlen = 0;
@@ -73,6 +74,7 @@ if fin ~= -1
         fwrite(fout, block, 'char');
       else
         saved = saved + ceil(contlen/1000);
+        nodes = nodes + 1;
         fseek(fin, contlen, 'cof');
       end
       contlen = 0;
@@ -85,7 +87,7 @@ if fin ~= -1
   fclose(fin);
   fclose(fout);
   
-  fprintf('Saved %d kB\n', saved)
+  fprintf('Saved %d kB over %d nodes\n', saved, nodes)
 end  % if file opened
 
 end  % main function
