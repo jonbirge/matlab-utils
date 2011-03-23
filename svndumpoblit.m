@@ -42,6 +42,7 @@ contoklen = length(contoken);
 fin = fopen([pathin fnamein]);
 fout = fopen([pathout fnameout], 'w');
 
+saved = 0;
 copyflag = true;  %#ok<*NASGU> % copy while true
 changeflag = false;
 contlen = 0;
@@ -49,14 +50,14 @@ if fin ~= -1
   dline = fgets(fin);
   while ischar(dline)
     if strncmp(dline, revtoken, revtoklen)
-      copyflag = true;
       rev = str2double(dline(revtoklen+1:end));
       fprintf('Revision: %d\n', rev);
+      copyflag = true;
     elseif strncmp(dline, nodetoken, nodetoklen)  % test for node
       if isempty(regexp(dline, testregexp, 'once'))  % test for file
         copyflag = true;
       else
-        fprintf('%s... ', dline(nodetoklen+2:end-1));
+        fprintf('%s...\n', dline(nodetoklen+2:end-1));
         copyflag = false;
       end
     elseif strncmp(dline, actiontoken, actiontoklen)
@@ -82,7 +83,7 @@ if fin ~= -1
       if copyflag
         copynbytes(fin, fout, contlen)
       else
-        fprintf('saved %d kB\n', ceil(contlen/1000));
+        saved = saved + ceil(contlen/1000);
         fseek(fin, contlen, 'cof');
       end
       contlen = 0;
@@ -93,6 +94,8 @@ if fin ~= -1
   
   fclose(fin);
   fclose(fout);
+  
+  fprintf('Saved %d kB\n', saved)
 end
 
 
