@@ -28,16 +28,10 @@ end
 % Setup tokens.
 revtoken = 'Revision-number:';
 nodetoken = 'Node-path:';
-sizetoken = 'Text-content-length:';
-changetoken = 'Node-action: change';
 contoken = 'Content-length';
-proptoken = 'PROPS-END';
 revtoklen = length(revtoken);
 nodetoklen = length(nodetoken);
-sizetoklen = length(sizetoken);
-changetoklen = length(changetoken);
 contoklen = length(contoken);
-proptoklen = length(proptoken);
 
 % Open files.
 fin = fopen([pathin fnamein]);
@@ -53,33 +47,35 @@ if fin ~= -1
   while ischar(dline)
     % Limited parsing.
     if strncmp(dline, revtoken, revtoklen)
-      rev = str2double(dline(revtoklen+1:end));
+      rev = str2double(dline(revtoklen+2:end-1));
       fprintf('Revision: %d\n', rev);
       copyflag = true;
     elseif strncmp(dline, nodetoken, nodetoklen)  % test for node
-      changeflag = false;
       if isempty(regexp(dline, testregexp, 'once'))  % test for file
         copyflag = true;
       else
         fprintf('%s...\n', dline(nodetoklen+2:end-1));
         copyflag = false;
       end
-    elseif strncmp(dline, changetoken, changetoklen)
-        changeflag = true;
-    elseif strncmp(dline, sizetoken, sizetoklen)
-      contlen = str2double(dline(sizetoklen+1:end));
+    elseif strncmp(dline, contoken, contoklen)
+      contlen = str2double(dline(contoklen+2:end-1));  % bytes
     end
     
-    % Copy line through.
+    % Copy parsed line through?
     if copyflag
       fwrite(fout, dline, 'char');
     end
     
-    % Fast forwards.
-    if changeflag && contlen > 0 && strncmp(dline, contoken, contoklen)  % change
-      fastforward(contlen + 1);  % include EOL
-    elseif ~changeflag && contlen > 0 && strncmp(dline, proptoken, proptoklen)  % add/del
-      fastforward(contlen)
+    % Fast forward?
+    if contlen > 0
+      if copyflag
+        block = fread(fin, contlen, 'char');
+        fwrite(fout, block, 'char');
+      else
+        saved = saved + ceil(contlen/1000);
+        fseek(fin, contlen, 'cof');
+      end
+      contlen = 0;
     end
     
     % Read in next line.
@@ -92,19 +88,5 @@ if fin ~= -1
   fprintf('Saved %d kB\n', saved)
 end  % if file opened
 
-  function fastforward(n)  % move ahead n bytes without parsing
-    if copyflag
-      copynbytes(fin, fout, n)
-    else
-      saved = saved + ceil(n/1000);
-      fseek(fin, contlen, 'cof');
-    end
-    contlen = 0; 
-  end
-
 end  % main function
 
-function copynbytes(fin, fout, n)
-block = fread(fin, n, 'char');
-fwrite(fout, block, 'char');
-end
