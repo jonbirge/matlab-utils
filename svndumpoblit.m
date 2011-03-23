@@ -1,4 +1,9 @@
 function svndumpoblit(exsuff, filein, fileout)
+% Need to handle Node-action: change properly, which has a different fucking
+% syntax for some inscrutible reason.
+
+% Should we use maximize size blocks during fast copy?
+
 
 if nargin < 1 || isempty(exsuff)
   exsuff = {'\.mexw32', '\.mexglx', '\.mexmac', '\.mexmaci64', '\.mexa64', 'mex\.dll'};
@@ -45,10 +50,11 @@ if fin ~= -1
       rev = str2double(dline(revtoklen+1:end));
       fprintf('Revision: %d\n', rev);
     elseif strncmp(dline, nodetoken, nodetoklen)  % test for node
-      if ~isempty(regexp(dline, testregexp, 'once'))  % test for file
-        copyflag = false;
-      else
+      if isempty(regexp(dline, testregexp, 'once'))  % test for file
         copyflag = true;
+      else
+        fprintf('obliterating %s\n', dline(nodetoklen+2:end-1));
+        copyflag = false;
       end
     elseif strncmp(dline, sizetoken, sizetoklen)
       contlen = str2double(dline(sizetoklen+1:end));
@@ -62,7 +68,7 @@ if fin ~= -1
       if copyflag
         copynbytes(fin, fout, contlen)
       else
-        fprintf('skipping %g kB...\n', contlen/1000);
+        fprintf('skipping %d kB...\n', ceil(contlen/1000));
         fseek(fin, contlen, 'cof');
       end
       contlen = 0;
