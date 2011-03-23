@@ -10,13 +10,6 @@ function ls(files)
 %
 %  See also CD, DIR, WHAT, TYPE.
 
-% TODO: Maybe the columns should have headings showing the type before each
-% group.
-% Include summary count of MATLAB code lines in the directory and
-% subdirectories by just keeping a list of all M-files during the directory
-% tree recurse. Then we can just scan through it linearly. Use a recursive
-% subfunction which writes to a variable in the top level function.
-
 
 % Hard coded settings.
 ncols = 3;
