@@ -72,27 +72,14 @@ if fin ~= -1
     
     % Copy line through.
     if copyflag
-      fprintf(fout, '%s', dline);  %% try fwrite for speed
+      fwrite(fout, dline, 'char');
     end
     
     % Fast forwards.
     if changeflag && contlen > 0 && strncmp(dline, contoken, contoklen)  % change
-      contlen = contlen + 1;  % include EOL
-      if copyflag
-        copynbytes(fin, fout, contlen)
-      else
-        saved = saved + ceil(contlen/1000);
-        fseek(fin, contlen, 'cof');
-      end
-      contlen = 0;
+      fastforward(contlen + 1);  % include EOL
     elseif ~changeflag && contlen > 0 && strncmp(dline, proptoken, proptoklen)  % add/del
-      if copyflag
-        copynbytes(fin, fout, contlen)
-      else
-        saved = saved + ceil(contlen/1000);
-        fseek(fin, contlen, 'cof');
-      end
-      contlen = 0;
+      fastforward(contlen)
     end
     
     % Read in next line.
@@ -104,6 +91,16 @@ if fin ~= -1
   
   fprintf('Saved %d kB\n', saved)
 end  % if file opened
+
+  function fastforward(n)  % move ahead n bytes without parsing
+    if copyflag
+      copynbytes(fin, fout, n)
+    else
+      saved = saved + ceil(n/1000);
+      fseek(fin, contlen, 'cof');
+    end
+    contlen = 0; 
+  end
 
 end  % main function
 
