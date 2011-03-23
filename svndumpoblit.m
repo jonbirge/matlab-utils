@@ -1,4 +1,5 @@
 function svndumpoblit(exsuff, filein, fileout)
+
 % Need to handle Node-action: change properly, which has a different fucking
 % syntax for some inscrutible reason. I think we'll have to key the content
 % off the Content-length token, and then have a flag which remembers if the
@@ -35,16 +36,19 @@ end
 revtoken = 'Revision-number:';
 nodetoken = 'Node-path:';
 sizetoken = 'Text-content-length:';
-proptoken = 'PROPS-END';
+actiontoken = 'Node-action:';
+contoken = 'Content-length';
 revtoklen = length(revtoken);
 nodetoklen = length(nodetoken);
 sizetoklen = length(sizetoken);
-proptoklen = length(proptoken);
+actiontoklen = length(actiontoken);
+contoklen = length(contoken);
 
 fin = fopen([pathin fnamein]);
 fout = fopen([pathout fnameout], 'w');
 
 copyflag = true;  %#ok<*NASGU> % copy while true
+changeflag = false;
 contlen = 0;
 if fin ~= -1
   dline = fgets(fin);
@@ -57,8 +61,14 @@ if fin ~= -1
       if isempty(regexp(dline, testregexp, 'once'))  % test for file
         copyflag = true;
       else
-        fprintf('obliterating %s\n', dline(nodetoklen+2:end-1));
+        fprintf('obliterating %s... ', dline(nodetoklen+2:end-1));
         copyflag = false;
+      end
+    elseif strncmp(dline, actiontoken, actiontoklen)
+      if strcmp(dline, 'Node-action: change')
+        changeflag = true;
+      else
+        changeflat = false;
       end
     elseif strncmp(dline, sizetoken, sizetoklen)
       contlen = str2double(dline(sizetoklen+1:end));
@@ -68,11 +78,16 @@ if fin ~= -1
       fprintf(fout, '%s', dline);
     end
 
-    if contlen > 0 && strncmp(dline, proptoken, proptoklen)  % handle content
+    if contlen > 0 && strncmp(dline, contoken, contoklen)  % handle content
+      if changeflag
+        contlen = contlen + 11;  % include PROPS-END and EOL
+      else
+        contlen = contlen + 1;  % just EOL
+      end
       if copyflag
         copynbytes(fin, fout, contlen)
       else
-        fprintf('skipping %d kB...\n', ceil(contlen/1000));
+        fprintf('saved %d kB\n', ceil(contlen/1000));
         fseek(fin, contlen, 'cof');
       end
       contlen = 0;
