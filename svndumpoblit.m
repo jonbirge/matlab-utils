@@ -56,7 +56,7 @@ if fin ~= -1
       if isempty(regexp(dline, testregexp, 'once'))  % test for file
         copyflag = true;
       else
-        fprintf('obliterating %s... ', dline(nodetoklen+2:end-1));
+        fprintf('%s... ', dline(nodetoklen+2:end-1));
         copyflag = false;
       end
     elseif strncmp(dline, actiontoken, actiontoklen)
