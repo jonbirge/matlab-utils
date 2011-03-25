@@ -175,6 +175,23 @@ if summary
   sumstr = sprintf([makesizestr(sizesum) ' in %d files, %d dirs'], ...
     filecount, dircount);
   fprintf([repmat(' ', 1, 78 - length(sumstr)) '[' sumstr ']\n'])
+  
+  % Output SVN status, if available.
+  % TODO: Integrate status into actual output, and add support for GIT.
+  if ~isempty(dir('.svn'))
+    [stat, res] = system('svn info');
+    if stat == 0
+      s = regexp(res, 'URL: (\S*)\n', 'tokens', 'once');
+      fprintf('svn url:\n')
+      fprintf(s{1})
+      fprintf('\n')
+    end
+    [stat, res] = system('svn status --ignore-externals');
+    if stat == 0
+      fprintf('svn status:\n')
+      fprintf(res)
+    end
+  end
 end
 
 
