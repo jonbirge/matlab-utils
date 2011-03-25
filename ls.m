@@ -64,7 +64,8 @@ parfor k = 1:n,
     hitlist(k) = 0;
   elseif hidedots && namestr(1) == '.'
     hitlist(k) = 0;
-  elseif hideasv && strcmp(namestr(max(end-3,1):end),'.asv')
+  elseif hideasv && ...
+      (strcmp(namestr(max(end-3,1):end),'.asv') || strcmp(namestr(end), '~'))
     hitlist(k) = 0;
   end
 end
