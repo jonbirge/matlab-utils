@@ -1,5 +1,5 @@
 function sn(varargin)
-%SN Show notes in director of M files.
+%SN Show notes in directory of M files.
 %  Searches each .M file in the current directory, and an optional
 %  number of subdirectories recursively, and displays each comment that is
 %  preceded by the words TODO: or FIX:, with the colon neccesary. This is
@@ -17,13 +17,12 @@ else
 end
 
 % Scan directories and print found lines.
-for k = 1:length(files)
+parfor k = 1:length(files)
   dirscan(files{k}, 'm', depthlimit)
 end
 fprintf('\n')
 
 end
-
 
 %%% Get suffix from file name string.
 function suffix = parsesuffix(filename)
@@ -43,7 +42,7 @@ f = fopen(filename);
 if f ~= -1
   mline = fgets(f);
   while ischar(mline)
-    match =  regexp(mline, '\%.*(TODO:[^\n^\r]*)', 'tokens', 'once');
+    match =  regexp(mline, '\%.*((TODO|FIX.*):[^\n^\r]*)', 'tokens', 'once');
     if ~isempty(match)
       if ~printedheader
         fprintf('\n%s:\n', filename)
@@ -68,7 +67,7 @@ if (level <= depthlimit) && (dirname(end) ~= '.' || level == 0)
   if length(ds) == 1 && strcmp(ds.name, dirname)
     dirname = '.';
   end
-  for k = 1:length(ds),
+  parfor k = 1:length(ds),
     d = ds(k);
     if d.isdir
       dirscan([dirname '/' d.name], suffix, depthlimit, level + 1);
