@@ -63,9 +63,9 @@ hitlist = ones(1,n);
 for k = 1:n,
   d = ds(k);
   namestr = d.name;
-  if strcmp(namestr,'.') || strcmp(namestr,'..')
+  if strcmp(namestr,'.')
     hitlist(k) = 0;
-  elseif hidedots && namestr(1) == '.'
+  elseif hidedots && namestr(1) == '.' && ~strcmp(namestr, '..')
     hitlist(k) = 0;
   elseif hideasv && ...
       (strcmp(namestr(max(end-3,1):end),'.asv') || strcmp(namestr(end), '~'))
