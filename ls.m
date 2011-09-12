@@ -84,11 +84,12 @@ for k = 1:n,
   filestr = d.name;
   
   % Decide on symbol and sorting to use.
-  dolink = false; %#ok<*NASGU>
   if d.isdir
     types(k) = -1000;
     dirsym = '/';
     namestr = filestr;
+    opentag = ['<a href="matlab:cd ' filestr '; ls">'];
+    closetag = '</a>';
   else
     typestr = parsesuffix(filestr);
     if ~isempty(typestr)
@@ -125,6 +126,13 @@ for k = 1:n,
           dirsym = ['.' typestr];
       end
       namestr = filestr(1:end-typelen-1);
+      if dolink
+        opentag = ['<a href="matlab:open ' filestr '">'];
+        closetag = '</a>';
+      else
+        opentag = '';
+        closetag = '';
+      end
     else
       dirsym = '';
       namestr = filestr;
@@ -157,13 +165,6 @@ for k = 1:n,
   
   % Build lines and add links.
   sizelen = length(sizestr);
-  if dolink
-    opentag = ['<a href="matlab:open ' filestr '">'];
-    closetag = '</a>';
-  else
-    opentag = '';
-    closetag = '';
-  end
   if showi
     countstr = [num2str(k) ' '];
     countlen = length(countstr);
