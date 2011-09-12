@@ -1,4 +1,4 @@
-function ls(files)
+function ls(files, showi)
 %LS list directory with formatting.
 %  ls returns a directory listing in the current directory, or in an
 %  optional path given. The output is sorted into columns, ASV files are
@@ -12,7 +12,6 @@ function ls(files)
 
 
 % Hard coded settings.
-showi = true;
 ncols = 3;
 maxlen = 28;
 colwidth = 90;
@@ -29,6 +28,9 @@ depthlimit = 1;  % how far to recurse directories
 if nargin == 0
   files = '.';
 end
+if nargin < 2
+  showi = false;
+end
 
 % Variable init.
 sizesum = 0;
@@ -44,7 +46,7 @@ if length(cdir) > colwidth;
     head = cdir(1:slashes(3));
     cdir = [head '...' wd];
 end
-if (nargin)
+if ~strcmp(files, '.')
   fprintf('\n%s\n', [cdir '/' files])
 else
   fprintf('\n%s\n', cdir)
