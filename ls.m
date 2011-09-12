@@ -21,7 +21,7 @@ fillstr = '.';  % MUST be only one character
 contstr = '__';
 hidedots = true;
 hideasv = true;
-summary = true;
+summary = false;
 countdir = true;  % count directory size
 depthlimit = 1;  % how far to recurse directories
 
@@ -163,7 +163,7 @@ for k = 1:n,
     closetag = '';
   end
   if showi
-    countstr = ['(' num2str(k) ') '];
+    countstr = [num2str(k) ' '];
     countlen = length(countstr);
   else
     countstr = '';
@@ -171,7 +171,7 @@ for k = 1:n,
   end
 	if (namelen + sizelen) > (maxlen - 1),  % filename too big
 		nameline{k} = [countstr opentag ...
-      namestr(1:max(maxlen-countlen-sizelen-symlen-1-contlen,1)) ...
+      namestr(1:max(maxlen-countlen-sizelen-symlen-contlen-1,1)) ...
       closetag contstr dirsym ' ' sizestr];
   else  % filename fits
 		nameline{k} = [countstr opentag namestr closetag dirsym ...
@@ -223,6 +223,8 @@ if summary
       fprintf(res)
     end
   end
+else
+  fprintf('\n')
 end
 
 %%% Recursive directory size subroutine. Should be replaced (along with the
