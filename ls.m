@@ -15,7 +15,7 @@ function ls(files, showi)
 ncols = 3;
 maxlen = 28;
 colwidth = 90;
-marginstr = ' ';
+marginstr = '  ';
 fillstr = '.';  % MUST be only one character
 contstr = '__';
 hidedots = true;
@@ -88,7 +88,7 @@ for k = 1:n,
     types(k) = -1000;
     dirsym = '/';
     namestr = filestr;
-    opentag = ['<a href="matlab:cd ' filestr '; ls">'];
+    opentag = ['<a href="matlab:cd ''' filestr '''; ls">'];
     closetag = '</a>';
   else
     typestr = parsesuffix(filestr);
