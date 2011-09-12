@@ -17,7 +17,7 @@ maxlen = 28;
 colwidth = 90;
 marginstr = '  ';
 fillstr = '.';  % MUST be only one character
-contstr = '__';
+contstr = ':';
 hidedots = true;
 hideasv = true;
 summary = false;
@@ -51,7 +51,7 @@ if ~strcmp(files, '.')
 else
   fprintf('\n%s\n', cdir)
 end
-linestr = repmat('=', 1, maxlen*ncols + length(marginstr)*(ncols-1));
+linestr = repmat('-', 1, maxlen*ncols + length(marginstr)*(ncols-1));
 fprintf([linestr '\n'])
 
 % Get directory list from OS.
