@@ -14,6 +14,8 @@ if f ~= -1
     mline = fgets(f);
   end
   fclose(f);
+else
+  warning('countmlines:fopen', ['error opening ' filename]);
 end
 
 end

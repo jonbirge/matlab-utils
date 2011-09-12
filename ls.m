@@ -12,9 +12,10 @@ function ls(files)
 
 
 % Hard coded settings.
+showi = true;
 ncols = 3;
-maxlen = 26;
-colwidth = 80;
+maxlen = 28;
+colwidth = 90;
 marginstr = ' ';
 fillstr = '.';  % MUST be only one character
 contstr = '__';
@@ -38,7 +39,7 @@ contlen = length(contstr);
 % Display directory first.
 cdir = pwd;
 if length(cdir) > colwidth;
-    slashes = find((cdir == '\') | (cdir == '/'));  % should also check other separators?
+    slashes = find((cdir == '\') | (cdir == '/'));
     wd = cdir(slashes(end-1):end);
     head = cdir(1:slashes(3));
     cdir = [head '...' wd];
@@ -57,7 +58,7 @@ n = length(ds);
 
 % Cull files.
 hitlist = ones(1,n);
-parfor k = 1:n,
+for k = 1:n,
   d = ds(k);
   namestr = d.name;
   if strcmp(namestr,'.') || strcmp(namestr,'..')
@@ -73,23 +74,27 @@ n = sum(hitlist);
 hitks = find(hitlist);
 
 %%% Make individual strings by type and decide sorting.
-nameline = char(zeros(n, maxlen));
+%nameline = char(zeros(n, maxlen));
+nameline = cell(1,n);
 types = zeros(n,1);  % sorting priority
 for k = 1:n,
   d = ds(hitks(k));
-  namestr = d.name;
+  filestr = d.name;
   
   % Decide on symbol and sorting to use.
+  dolink = false; %#ok<*NASGU>
   if d.isdir
     types(k) = -1000;
     dirsym = '/';
+    namestr = filestr;
   else
-    typestr = parsesuffix(namestr);
+    typestr = parsesuffix(filestr);
     if ~isempty(typestr)
+      dolink = true;
       typelen = length(typestr);
       switch typestr
         case 'm',
-          f = fopen(namestr);
+          f = fopen(filestr);
           mline = fgets(f);
           firstline = mline;
           fclose(f);
@@ -98,24 +103,29 @@ for k = 1:n,
             dirsym = '@';
           elseif strfind(firstline, 'function')
             types(k) = 95;     
-            dirsym = '()';
+            dirsym = '*';
           else
             types(k) = 90;
             dirsym = '$';
           end
         case 'mat',
           types(k) = 80;
-          dirsym = '+';
+          dirsym = '#';
         case 'fig',
           types(k) = 70;
-          dirsym = '#';
+          dirsym = '+';
+        case 'mdl',
+          types(k) = 60;
+          dirsym = '&';
         otherwise,
+          dolink = false;
           types(k) = -int8(typestr(1));
           dirsym = ['.' typestr];
       end
-      namestr = namestr(1:end-typelen-1);
+      namestr = filestr(1:end-typelen-1);
     else
       dirsym = '';
+      namestr = filestr;
     end
   end
   symlen = length(dirsym);
@@ -134,35 +144,56 @@ for k = 1:n,
   else
     filecount = filecount + 1;
     filesize = ceil(d.bytes/1024);
-    sizestr = [makesizestr(filesize) ' '];
+    if strcmp(typestr, 'm')  % m file
+      lcount = countmlines(filestr);
+      sizestr = [num2str(lcount) 'L '];
+    else
+      sizestr = [makesizestr(filesize) ' '];
+    end
   end
   sizesum = sizesum + filesize;
   
-  % Build lines.
+  % Build lines and add links.
   sizelen = length(sizestr);
-	if (namelen + sizelen) > (maxlen - 1),
-		nameline(k,:) = [namestr(1:max(maxlen-sizelen-symlen-1-contlen,1)) ...
-      contstr dirsym ' ' sizestr];
-	else
-		nameline(k,:) = [namestr dirsym ...
-      repmat(fillstr, 1, maxlen-sizelen-namelen) sizestr];
+  if dolink
+    opentag = ['<a href="matlab:open ' filestr '">'];
+    closetag = '</a>';
+  else
+    opentag = '';
+    closetag = '';
+  end
+  if showi
+    countstr = ['(' num2str(k) ') '];
+    countlen = length(countstr);
+  else
+    countstr = '';
+    countlen = 0;
+  end
+	if (namelen + sizelen) > (maxlen - 1),  % filename too big
+		nameline{k} = [countstr opentag ...
+      namestr(1:max(maxlen-countlen-sizelen-symlen-1-contlen,1)) ...
+      closetag contstr dirsym ' ' sizestr];
+  else  % filename fits
+		nameline{k} = [countstr opentag namestr closetag dirsym ...
+      repmat(fillstr, 1, maxlen-countlen-sizelen-namelen) sizestr];
   end
 end  % for each individual file string
 
 % Sort.
-[tmp, p] = sort(-types); %#ok<ASGLU>
-nameline = nameline(p,:);
+[~, p] = sort(-types);
+nameline = nameline(p);
 
 % Output into columns.
 nrows = ceil(n/ncols);
 npad = nrows*ncols - n;
-nameline = [nameline; repmat(' ', npad, size(nameline, 2))];
+blankpad = {repmat(' ', 1, size(nameline, 2))};
+nameline = [nameline repmat(blankpad, 1, npad)];  % ensure we have enough
 for k = 1:nrows,
   for m = 1:(ncols - 1),
-    fprintf(nameline(k + (m-1)*nrows,:))
+    fprintf(nameline{k + (m-1)*nrows})
     fprintf(marginstr);
   end
-  fprintf(nameline(k + (ncols-1)*nrows,:));
+  fprintf(nameline{k + (ncols-1)*nrows});
   fprintf('\n')
 end
 
@@ -171,14 +202,13 @@ if summary
   [mlinecount, mfilecount] = msize('.', 2);
   sumstr = sprintf('mfiles: %d lines in %d files', ...
     mlinecount, mfilecount);
-  fprintf([repmat(' ', 1, 78 - length(sumstr)) '[' sumstr ']\n'])
+  fprintf([repmat(' ', 1, colwidth - 5 - length(sumstr)) '[' sumstr ']\n'])
   
   sumstr = sprintf([makesizestr(sizesum) ' in %d files, %d dirs'], ...
     filecount, dircount);
-  fprintf([repmat(' ', 1, 78 - length(sumstr)) '[' sumstr ']\n'])
+  fprintf([repmat(' ', 1, colwidth - 5 - length(sumstr)) '[' sumstr ']\n'])
   
   % Output SVN status, if available.
-  % TODO: Integrate status into actual output, and add support for GIT.
   if ~isempty(dir('.svn'))
     [stat, res] = system('svn info');
     if stat == 0
@@ -194,44 +224,6 @@ if summary
     end
   end
 end
-
-
-%%% Get suffix from file name string.
-function suffix = parsesuffix(filename)
-dotks = find(filename == '.');
-if ~isempty(dotks)
-  suffix = filename(dotks(end)+1:end);
-else
-  suffix = [];
-end
-
-%%% Recursive m-file size subroutine.
-function [mlinesout, mfilesout] = msize(dirname, depthlimit, level)
-if nargin < 3
-  level = 0;
-end
-mlines = 0;
-mfiles = 0;
-if (level <= depthlimit) && (dirname(end) ~= '.' || level == 0)
-  ds = dir(dirname);
-  parfor k = 1:length(ds),
-    d = ds(k);
-    filename = d.name;
-    if d.isdir
-      [mlinesdir, mfilesdir] = ...
-        msize([dirname '/' filename], depthlimit, level + 1);
-      mlines = mlines + mlinesdir;
-      mfiles = mfiles + mfilesdir;
-    else
-      typestr = parsesuffix(d.name);
-      if typestr == 'm'
-        mlines = mlines + countmlines([dirname '/' filename]);
-      end
-    end
-  end
-end
-mfilesout = mfiles;
-mlinesout = mlines;
 
 %%% Recursive directory size subroutine. Should be replaced (along with the
 %%% above) with a single routine that travels the whole tree and is given a
@@ -256,4 +248,3 @@ if (level <= depthlimit) && (dirname(end) ~= '.')
   s = ceil(s/1024);
 end
 sout = s;
-
