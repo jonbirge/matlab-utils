@@ -45,7 +45,8 @@ if f ~= -1
     match =  regexp(mline, '\%.*((TODO|FIX.*):[^\n^\r]*)', 'tokens', 'once');
     if ~isempty(match)
       if ~printedheader
-        fprintf('\n%s:\n', filename)
+        filenamestr = ['<a href="matlab: open "' filename '">' filename '</a>'];
+        fprintf('\n%s:\n', filenamestr)
         printedheader = true;
       end
       fprintf('%d: %s\n', lineno, match{1})
@@ -57,8 +58,13 @@ if f ~= -1
 end
 end
 
+
 %%% Recursive directory listing subroutine.
+% TODO: We should make a central directory scanning recursing routine that just
+% compiles a list of the files and their path. Perhaps it would have the
+% same format as the output of dir, but over the entire tree.
 function dirscan(dirname, suffix, depthlimit, level)
+
 if nargin < 4
   level = 0;
 end
@@ -81,4 +87,5 @@ if (level <= depthlimit) && (dirname(end) ~= '.' || level == 0)
     end
   end
 end
+
 end
