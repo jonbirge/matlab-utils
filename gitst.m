@@ -9,7 +9,7 @@ if status == 0
   fprintf('git status:\n')
   fprintf(result)
 else
-  error('gitst:git', 'git command not found in system')
+  error('gitst:git', result)
 end
 
 end
