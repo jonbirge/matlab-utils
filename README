@@ -4,10 +4,10 @@ specific field of study, and are intended to be useful for general
 numerical work.
 
 The highlights are: a version of ls that shows the number of lines of
-code in each M file, with clickable links to open MATLAB-based
-files; a utility to assist with cleaning up an SVN repository dump of
-all MEX binaries; and utilities to simplify GUI programming by allowing
-easier access to handle properties.
+code in each M file, with clickable links to open MATLAB-based files;
+a utility to assist with cleaning up an SVN repository dump of all MEX
+binaries; and utilities to simplify GUI programming by allowing easier
+access to handle properties.
 
 There are also simple MATLAB functions for accessing simple routines
 in git and svn, designed to allow some interaction with version
