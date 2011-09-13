@@ -10,7 +10,7 @@ end
 if length(logstr) > 1
   gitcmd = ['git commit -a -m "' logstr '"'];
   fprintf('running command: %s\n', gitcmd);
-  [status, result] = system(gitcmd);
+  [status, result] = systemwpath(gitcmd);
   if status == 0
     fprintf('git commit:\n')
     fprintf(result)
