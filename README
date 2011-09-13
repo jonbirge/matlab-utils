@@ -9,6 +9,10 @@ files; a utility to assist with cleaning up a SVN repository dump of
 all MEX binaries; utilities to simplify GUI programming by allowing
 easier access to handle properties.
 
+There are also simple MATLAB functions for accessing simple routines
+in git and svn, designed to allow some interaction with version
+control from within MATLAB.
+
 The addition of any similarly generally applicable tools developed by
 others would be a welcome addition, as I'd like to see this become a
 large set of general tools to be shared.
