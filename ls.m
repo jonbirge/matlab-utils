@@ -88,22 +88,24 @@ filenames = cell(1,n);
 namestrs = cell(1,n);
 typestrs = cell(1,n);
 sizestrs = cell(1,n);
+isdir = false(n,1);
+dolink = false(n,1);
 typeindex = zeros(n,1);  % sorting priority
-for krow = 1:n,
-  d = ds(krow);
+for k = 1:n,
+  d = ds(k);
   filestr = d.name;
   
   % Decide on symbol and sorting to use.
   if d.isdir
-    typeindex(krow) = -1000;
+    typeindex(k) = -1000;
     dirsym = '/';
     namestr = filestr;
-    opentag = ['<a href="matlab:cd ''' filestr '''; ls">'];
-    closetag = '</a>';
+    isdir(k) = true;
+    dolink(k) = true;
   else
     typestr = parsesuffix(filestr);
     if ~isempty(typestr)
-      dolink = true;
+      dolink(k) = true;
       typelen = length(typestr);
       switch typestr
         case 'm',
@@ -112,68 +114,61 @@ for krow = 1:n,
           firstline = mline;
           fclose(f);
           if strfind(firstline, 'classdef')
-            typeindex(krow) = 99;
+            typeindex(k) = 99;
             dirsym = '@';
           elseif strfind(firstline, 'function')
-            typeindex(krow) = 95;
+            typeindex(k) = 95;
             dirsym = '*';
           else
-            typeindex(krow) = 90;
+            typeindex(k) = 90;
             dirsym = '$';
           end
         case 'mat',
-          typeindex(krow) = 80;
+          typeindex(k) = 80;
           dirsym = '#';
         case 'fig',
-          typeindex(krow) = 70;
+          typeindex(k) = 70;
           dirsym = '+';
         case 'mdl',
-          typeindex(krow) = 60;
+          typeindex(k) = 60;
           dirsym = '&';
         otherwise,
-          dolink = false;
-          typeindex(krow) = -int8(typestr(1));
+          dolink(k) = false;
+          typeindex(k) = -int8(typestr(1));
           dirsym = ['.' typestr];
       end
       namestr = filestr(1:end-typelen-1);
-      if dolink
-        opentag = ['<a href="matlab:open ' filestr '">'];
-        closetag = '</a>';
-      else
-        opentag = '';
-        closetag = '';
-      end
     else
       dirsym = '';
       namestr = filestr;
     end
   end
-  typestrs{krow} = dirsym;
-  namestrs{krow} = namestr;
-  filenames{krow} = filestr;
+  typestrs{k} = dirsym;
+  namestrs{k} = namestr;
+  filenames{k} = filestr;
 
   % Compute file size.
   if d.isdir
     dircount = dircount + 1;
     if countdir
       filesize = dirsize(namestr, depthlimit);
-      sizestrs{krow} = ['(' makesizestr(filesize) ')'];
+      sizestrs{k} = ['(' makesizestr(filesize) ')'];
     else
       filesize = 0; %#ok<*UNRCH>
-      sizestrs{krow} = '-- ';
+      sizestrs{k} = '-- ';
     end
   else
     filecount = filecount + 1;
     filesize = ceil(d.bytes/1024);
     if strcmp(typestr, 'm')  % m file
       lcount = countmlines(filestr);
-      sizestrs{krow} = [num2str(lcount) 'L '];
+      sizestrs{k} = [num2str(lcount) 'L '];
     else
-      sizestrs{krow} = [makesizestr(filesize) ' '];
+      sizestrs{k} = [makesizestr(filesize) ' '];
     end
   end
   sizesum = sizesum + filesize;
-end
+end  % each file
 
 %%% Sort by type.
 [~, p] = sort(-typeindex);
@@ -194,6 +189,18 @@ if printq  % write to terminal
           countstr = '';
           countlen = 0;
         end
+        if dolink(k)
+          if isdir(k)
+            opentag = ['<a href="matlab:cd ''' filenames{k} '''; ls">'];
+            closetag = '</a>';
+          else
+            opentag = ['<a href="matlab:open ' filenames{k} '">'];
+            closetag = '</a>';
+          end
+        else
+          opentag = '';
+          closetag = '';
+        end
         varlen = countlen + length(sizestrs{k}) + length(typestrs{k});
         if (namelen + varlen) > (maxlen - 1),  % filename too big
           nameline = [countstr opentag ...
@@ -206,9 +213,9 @@ if printq  % write to terminal
         fprintf(nameline)
         fprintf(marginstr);
       end
-    end  % for each column
+    end  % each column
     fprintf('\n')  % ching-zip!
-  end  % for each row
+  end  % each row
 else  % write to variable
   filelist = filenames(p);
 end
