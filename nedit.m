@@ -6,9 +6,6 @@ if ischar(k)
 end
 
 filelist = ls();
-
-
-filename = filelist(k);
-open(filename);
+open(filelist{k});
 
 end
