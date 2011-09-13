@@ -1,7 +1,7 @@
 function mlines = countmlines(filename)
 %COUNTMLINES Count code lines in an M file
 %   The function takes a filename as an argument and returns a count of the
-%   number of lines of code, excluding white space and comments.
+%   number of lines of code, excluding white space.
 
 mlines = 0;
 f = fopen(filename);
