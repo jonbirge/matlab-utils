@@ -16,7 +16,7 @@ ncols = 3;
 maxlen = 28;
 colwidth = 90;
 marginstr = '  ';
-fillstr = '.';  % MUST be only one character
+fillstr = ' ';  % MUST be only one character
 contstr = ':';
 hidedots = true;
 hideasv = true;
@@ -210,30 +210,22 @@ if summary
   sumstr = sprintf([makesizestr(sizesum) ' in %d files, %d dirs'], ...
     filecount, dircount);
   fprintf([repmat(' ', 1, colwidth - 5 - length(sumstr)) '[' sumstr ']\n'])
-  
-  % Output SVN status, if available.
-  if ~isempty(dir('.svn'))
-    [stat, res] = system('svn info');
-    if stat == 0
-      s = regexp(res, 'URL: (\S*)\n', 'tokens', 'once');
-      fprintf('svn url:\n')
-      fprintf(s{1})
-      fprintf('\n')
-    end
-    [stat, res] = system('svn status --ignore-externals');
-    if stat == 0
-      fprintf('svn status:\n')
-      fprintf(res)
-    end
-  end
 else
   fprintf('\n')
 end
 
-%%% Recursive directory size subroutine. Should be replaced (along with the
-%%% above) with a single routine that travels the whole tree and is given a
-%%% functional to apply to each file, which is then summed. Sort of a
-%%% directory summary function that acts recursively.
+% Output SVN status, if available.
+if ~isempty(dir('.svn'))
+  svnst()
+end
+
+% Output git status, if available.
+if ~isempty(dir('.git'))
+  gitst()
+end
+  
+
+% Recursive directory size subroutine.
 function sout = dirsize(dirname, depthlimit, level)
 if nargin < 3
   level = 0;
