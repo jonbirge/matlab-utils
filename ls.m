@@ -23,7 +23,7 @@ hideasv = true;
 summary = false;
 countdir = true;  % count directory size
 depthlimit = 1;  % how far to recurse directories
-showvc = false;
+showvc = true;
 
 %%% Input handling.
 if nargin == 0
