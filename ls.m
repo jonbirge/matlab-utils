@@ -20,10 +20,10 @@ fillstr = '.';  % MUST be only one character or an escape sequence
 contstr = ':';
 hidedots = true;
 hideasv = true;
-summary = false;
+summary = true;
 countdir = true;  % count directory size
 depthlimit = 1;  % how far to recurse directories
-showvc = true;
+showvc = false;
 
 %%% Input handling.
 if nargin == 0
@@ -226,11 +226,11 @@ if printq
     [mlinecount, mfilecount] = msize('.', 2);
     sumstr = sprintf('mfiles: %d lines in %d files', ...
       mlinecount, mfilecount);
-    fprintf([repmat(' ', 1, colwidth - 5 - length(sumstr)) '[' sumstr ']\n'])
+    fprintf([repmat(' ', 1, colwidth + 2 - length(sumstr)) '[' sumstr ']\n'])
     
     sumstr = sprintf([makesizestr(sizesum) ' in %d files, %d dirs'], ...
       filecount, dircount);
-    fprintf([repmat(' ', 1, colwidth - 5 - length(sumstr)) '[' sumstr ']\n'])
+    fprintf([repmat(' ', 1, colwidth + 2 - length(sumstr)) '[' sumstr ']\n'])
   else
     fprintf('\n')
   end
