@@ -257,7 +257,7 @@ end
 s = 0;
 if (level <= depthlimit) && (dirname(end) ~= '.')
   ds = dir(dirname);
-  parfor k = 1:length(ds),
+  for k = 1:length(ds),
     d = ds(k);
     if d.isdir
       sdir = dirsize([dirname '\' d.name], depthlimit, level + 1);
