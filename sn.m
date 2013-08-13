@@ -17,7 +17,7 @@ else
 end
 
 % Scan directories and print found lines.
-parfor k = 1:length(files)
+for k = 1:length(files)
   dirscan(files{k}, 'm', depthlimit)
 end
 fprintf('\n')
