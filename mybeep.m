@@ -1,9 +1,16 @@
-function mybeep(d)
+function snd = mybeep(d)
+%MYBEEP Make a sound
+%   MYBEEP(d) plays a tone for d seconds. If d is not specified, a short
+%   sound will be played.
+%
+%   See also SOUND
 
 fs = 8192;
 if nargin < 1
-  d = 2048;
+  ns = 2048;
+else
+  ns = 8192*d;
 end
-wnd = window(@gausswin, d).';
-snd = wnd.*(sin(1/2*(1:d)) + sin(1/3*(1:d)))/2;
+wnd = sin(linspace(0, pi, ns)).^2;
+snd = wnd.*(sin(1/2*(1:ns)) + sin(1/3*(1:ns)))/2;
 sound(snd, fs)
