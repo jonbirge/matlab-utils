@@ -1,26 +1,33 @@
 function h = myplot(varargin)
-
-%grey = [0.5 0.5 0.5];
+% MYPLOT Plot
+% grey = [0.5 0.5 0.5];
 black = [0 0 0];
 white = [1 1 1];
+% blue = [0.2 0.7 0.9];
+% darkblue = [0 .25 0.5];
 
 hdls = plot(varargin{:});
 
 axh = gca;
 fh = gcf;
 
-set(hdls, 'LineWidth', 4, 'Color', [0 .25 0.5])
+set(hdls, 'LineWidth', 4)
+% if length(hdls) == 1
+%   set(hdls, 'Color', blue)
+% end
+% set(hdls, 'LineWidth', 3, 'Color', black)
 
 set(fh, 'Color', white)
 
-xdat = get(hdls, 'XData');
+xdat = get(hdls(1), 'XData');
 xlim([min(xdat) max(xdat)])
 
 set(axh, ...
   'FontName', 'Arial', 'Color', white, 'FontSize', 18, 'FontWeight', 'Bold', ...
-  'GridLineStyle', ':', ...
-  'XGrid', 'off', 'XColor', black, 'XMinorTick', 'on', ...
-  'YGrid', 'off', 'YColor', black, 'YMinorTick', 'on')
+  'GridLineStyle', '-', 'GridColor', 0.8*ones(1,3), ...
+  'XGrid', 'off', 'XColor', black, 'XMinorTick', 'off', ...
+  'YGrid', 'off', 'YColor', black, 'YMinorTick', 'off', ...
+  'LineWidth', 2)
 
 if nargout > 0
   h = hdls;
