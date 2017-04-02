@@ -1,5 +1,6 @@
 function h = myplot(varargin)
-% MYPLOT Plot
+%MYPLOT Custom plotting
+
 % grey = [0.5 0.5 0.5];
 black = [0 0 0];
 white = [1 1 1];
