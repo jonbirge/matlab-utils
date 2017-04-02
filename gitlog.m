@@ -4,7 +4,7 @@ function gitlog
 %  system git command. Useful only in that it lets you check git status
 %  without having to go to a terminal.
 
-[status, result] = systemwpath('git log --graph --oneline --decorate --all');
+[status, result] = systemwpath('git --no-pager log --graph --oneline --decorate --all | head -n 16');
 if status == 0
   fprintf('git log:\n')
   fprintf(result)
