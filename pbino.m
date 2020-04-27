@@ -5,6 +5,6 @@ function p = pbino(r, n, pi)
 %  version, however, nor is it valid for very large n.
 
 p = zeros(size(r));
-parfor i = 1:length(r),
+parfor i = 1:length(r)
    p(i) = nchoosek(n, r(i))*pi^r(i)*(1 - pi)^(n - r(i));
 end

@@ -9,7 +9,7 @@ mlines = 0;
 mfiles = 0;
 if (level <= depthlimit) && (dirname(end) ~= '.' || level == 0)
   ds = dir(dirname);
-  for k = 1:length(ds),
+  for k = 1:length(ds)
     d = ds(k);
     filename = d.name;
     if d.isdir

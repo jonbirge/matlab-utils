@@ -7,7 +7,7 @@ function A = mtimes2(varargin)
 N = length(varargin);
 A = varargin{N};
 
-for i = (N-1):-1:1,
+for i = (N-1):-1:1
    
    B = varargin{i};
    
@@ -23,16 +23,16 @@ for i = (N-1):-1:1,
    
    % Case I: A or B is a single matrix
    if (Az == 1)
-      for z = 1:Bz,
+      for z = 1:Bz
          C(:,:,z) = B(:,:,z) * A;
       end
    else
       if (Bz == 1)
-         for z = 1:Az,
+         for z = 1:Az
             C(:,:,z) = B * A(:,:,z);
          end
       else  % Case II: A and B have the same size.
-         for z = 1:Az,
+         for z = 1:Az
             C(:,:,z) = B(:,:,z) * A(:,:,z);
          end
       end

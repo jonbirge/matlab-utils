@@ -15,10 +15,11 @@ xedges = linspace(xmin, xmax, n + 1);
 yedges = linspace(ymin, ymax, n + 1);
 
 % Generate histograms along y-axis.
-for i = 1:n,
+h = zeros(n);
+for i = 1:n
    yi = y(x >= xedges(i) & x < xedges(i + 1));
    if ~isempty(yi)
-      yhisti = histc(yi, yedges);
+      yhisti = histcounts(yi, yedges);
    else
       yhisti = zeros(1, n+1);
    end
