@@ -46,7 +46,7 @@ contlen = length(contstr);
 
 %%% Display directory first.
 cdir = pwd;
-if length(cdir) > colwidth;
+if length(cdir) > colwidth
   slashes = find((cdir == '\') | (cdir == '/'));
   wd = cdir(slashes(end-1):end);
   head = cdir(1:slashes(3));
@@ -68,7 +68,7 @@ n = length(ds);
 
 %%% Cull files.
 hitlist = true(1,n);
-for krow = 1:n,
+for krow = 1:n
   d = ds(krow);
   namestr = d.name;
   if strcmp(namestr,'.')
@@ -91,7 +91,7 @@ sizestrs = cell(1,n);
 isdir = false(n,1);
 dolink = false(n,1);
 typeindex = zeros(n,1);  % sorting priority
-for k = 1:n,
+for k = 1:n
   d = ds(k);
   filestr = d.name;
   
@@ -108,31 +108,31 @@ for k = 1:n,
       dolink(k) = true;
       typelen = length(typestr);
       switch typestr
-        case 'm',
+        case 'm'
           f = fopen(filestr);
           mline = fgets(f);
           firstline = mline;
           fclose(f);
-          if strfind(firstline, 'classdef')
+          if contains(firstline, 'classdef')
             typeindex(k) = 99;
             dirsym = '@';
-          elseif strfind(firstline, 'function')
+          elseif contains(firstline, 'function')
             typeindex(k) = 95;
             dirsym = '*';
           else
             typeindex(k) = 90;
             dirsym = '$';
           end
-        case 'mat',
+        case 'mat'
           typeindex(k) = 80;
           dirsym = '#';
-        case 'fig',
+        case 'fig'
           typeindex(k) = 70;
           dirsym = '+';
-        case 'mdl',
+        case 'mdl'
           typeindex(k) = 60;
           dirsym = '&';
-        otherwise,
+        otherwise
           dolink(k) = false;
           typeindex(k) = -int8(typestr(1));
           dirsym = ['.' typestr];
@@ -176,8 +176,8 @@ end  % each file
 %%% Output.
 if printq  % write to terminal
   nrows = ceil(n/ncols);
-  for krow = 1:nrows,
-    for kcol = 1:ncols,
+  for krow = 1:nrows
+    for kcol = 1:ncols
       ksort = krow + (kcol-1)*nrows;  % which sorted element we're on
       if ksort <= n
         k = p(ksort);
@@ -202,7 +202,7 @@ if printq  % write to terminal
           closetag = '';
         end
         varlen = countlen + length(sizestrs{k}) + length(typestrs{k});
-        if (namelen + varlen) > (maxlen - 1),  % filename too big
+        if (namelen + varlen) > (maxlen - 1)  % filename too big
           nameline = [countstr opentag ...
             namestrs{k}(1:max(maxlen-varlen-contlen-1,1)) ...
             closetag contstr typestrs{k} ' ' sizestrs{k}];
@@ -257,7 +257,7 @@ end
 s = 0;
 if (level <= depthlimit) && (dirname(end) ~= '.')
   ds = dir(dirname);
-  for k = 1:length(ds),
+  for k = 1:length(ds)
     d = ds(k);
     if d.isdir
       sdir = dirsize([dirname '\' d.name], depthlimit, level + 1);

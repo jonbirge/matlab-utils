@@ -73,7 +73,7 @@ if (level <= depthlimit) && (dirname(end) ~= '.' || level == 0)
   if length(ds) == 1 && strcmp(ds.name, dirname)
     dirname = '.';
   end
-  for k = 1:length(ds),
+  for k = 1:length(ds)
     d = ds(k);
     if d.isdir
       dirscan([dirname '/' d.name], suffix, depthlimit, level + 1);
