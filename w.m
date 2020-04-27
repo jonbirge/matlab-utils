@@ -24,6 +24,7 @@ vartab = table(Size, Mem, Class, 'RowNames', NameC);
 
 if nargout == 0
   disp(vartab)
+  fprintf('\n')
 else
   vartabout = vartab;
 end
