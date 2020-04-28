@@ -11,8 +11,8 @@ if ischar(varargin{1}) && ischar(varargin{2}) % command form
   xval = evalin('caller', xname);
   yval = evalin('caller', yname);
   hdls = plot(xval, yval, varargin{3:end});
-  xlabel(['\it ' xname])
-  ylabel(['\it ' yname])
+  xlabel(xname)
+  ylabel(yname)
 else % normal form
   hdls = plot(varargin{:});
 end

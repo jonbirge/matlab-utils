@@ -19,8 +19,8 @@ set(hdls, 'LineWidth', 3)
 
 set(fh, 'Color', white)
 
-% xdat = get(hdls, 'XData');
-% xlim([min(xdat) max(xdat)])
+xdat = get(hdls, 'XData');
+xlim([min(xdat) max(xdat)])
 
 set(axh, ...
   'FontName', 'Arial', 'FontSize', 14, 'FontWeight', 'Bold', ...
@@ -34,4 +34,3 @@ set(labs, 'FontName', 'Arial', 'FontSize', 16, 'FontWeight', 'Bold');
 if setfig
   figure(oldfh);
 end
-
