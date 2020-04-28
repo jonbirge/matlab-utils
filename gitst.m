@@ -4,12 +4,9 @@ function gitst
 %  system git command. Useful only in that it lets you check git status
 %  without having to go to a terminal.
 
-[status, result] = systemwpath('git status');
+[status, result] = systemwpath('git status -s -b');
 if status == 0
-  fprintf('git status:\n')
-  fprintf(result)
+  disp(result)
 else
   error('gitst:git', result)
-end
-
 end

@@ -1,35 +1,25 @@
 function h = myplot(varargin)
-%MYPLOT Custom plotting
+%MYPLOT 2D plot using custom settings
+%  myplot(...) takes the same parameters as the default MATLAB plot
+%  routine. In addition, the command form 'myplot x y' will plot the
+%  variables named x and y from the workspace, labeling the axes of the
+%  plot as such.
 
-% grey = [0.5 0.5 0.5];
-black = [0 0 0];
-white = [1 1 1];
-% blue = [0.2 0.7 0.9];
-% darkblue = [0 .25 0.5];
+if ischar(varargin{1}) && ischar(varargin{2}) % command form
+  xname = varargin{1};
+  yname = varargin{2};
+  xval = evalin('caller', xname);
+  yval = evalin('caller', yname);
+  hdls = plot(xval, yval, varargin{3:end});
+  xlabel(xname)
+  ylabel(yname)
+else % normal form
+  hdls = plot(varargin{:});
+end
 
-hdls = plot(varargin{:});
-
-axh = gca;
+% make it look nice
 fh = gcf;
-
-set(hdls, 'LineWidth', 4)
-% if length(hdls) == 1
-%   set(hdls, 'Color', blue)
-% end
-% set(hdls, 'LineWidth', 3, 'Color', black)
-
-set(fh, 'Color', white)
-
-xdat = get(hdls(1), 'XData');
-xlim([min(xdat) max(xdat)])
-
-set(axh, ...
-  'FontName', 'Arial', 'Color', white, 'FontSize', 18, 'FontWeight', 'Bold', ...
-  'GridLineStyle', '-', 'GridColor', 0.5*ones(1,3), ...
-  'MinorGridLineStyle', '-', 'MinorGridColor', 0.5*ones(1,3), ...
-  'XGrid', 'off', 'XColor', black, 'XMinorTick', 'off', ...
-  'YGrid', 'off', 'YColor', black, 'YMinorTick', 'off', ...
-  'LineWidth', 2)
+makepretty(fh);
 
 if nargout > 0
   h = hdls;
