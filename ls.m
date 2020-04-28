@@ -224,11 +224,11 @@ end
 if printq
   if summary
     [mlinecount, mfilecount] = msize('.', 2);
-    sumstr = sprintf('mfiles: %d lines in %d files', ...
+    sumstr = sprintf('matlab: %d lines in %d files', ...
       mlinecount, mfilecount);
     fprintf([repmat(' ', 1, colwidth + 2 - length(sumstr)) '[' sumstr ']\n'])
     
-    sumstr = sprintf([makesizestr(sizesum) ' in %d files, %d dirs'], ...
+    sumstr = sprintf(['all: ' makesizestr(sizesum) ' in %d files, %d dirs'], ...
       filecount, dircount);
     fprintf([repmat(' ', 1, colwidth + 2 - length(sumstr)) '[' sumstr ']\n'])
   else
