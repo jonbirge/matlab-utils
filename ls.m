@@ -1,5 +1,5 @@
 function filelist = ls(files, showi)
-%LS list directory with formatting.
+%LS list directory with formatting
 %  ls returns a directory listing in the current directory, or in an
 %  optional path given. The output is sorted into columns, ASV files are
 %  supressed, and common MATLAB file types are highlighten. In addition M

@@ -1,5 +1,5 @@
 function [phi, xc, yc] = hist2d(x, y, n)
-%HIST2 Two-dimensional histogram.
+%HIST2 Two-dimensional histogram. TODO: Might be obsolete.
 
 if (nargin < 3)
    n = 10;  % default bins
@@ -15,14 +15,14 @@ xedges = linspace(xmin, xmax, n + 1);
 yedges = linspace(ymin, ymax, n + 1);
 
 % Generate histograms along y-axis.
-for i = 1:n,
+for i = 1:n
    yi = y(x >= xedges(i) & x < xedges(i + 1));
    if ~isempty(yi)
-      yhisti = histc(yi, yedges);
+      yhisti = histcounts(yi, yedges);
    else
       yhisti = zeros(1, n+1);
    end
-   h(:,i) = fliplr(yhisti(1:(end - 1)))';
+   h(:,i) = fliplr(yhisti(1:(end - 1)))'; %#ok<AGROW>
 end
 
 xc = (xedges(1:end-1) + xedges(2:end))/2;

@@ -1,4 +1,6 @@
 function printdata(M, headers)
+%PRINTDATA  Pretty print matrix M with headers cell array
+% TODO: May be obsolete. Certainly sucks.
 
 % Settings
 stops = 10;
@@ -12,7 +14,7 @@ end
 headlen = length(headerline);
 doubleline = repmat('=', 1, headlen);
 singleline = repmat('-', 1, headlen);
-if sum(chop(M(:,1) - round(M(:,1)), 8)) == 0
+if sum(M(:,1) - round(M(:,1)), 8) == 0
   intx = true;
 else
   intx = false;
